@@ -1,8 +1,5 @@
-// card details
-// const cardDetails =document.getElementById('card-details')
-
 const loadProducts = () => {
-  fetch('../js/data.json')
+  fetch('https://fakestoreapi.com/products')
     .then((response) => response.json())
     .then((data) => showProducts(data));
 };
@@ -16,9 +13,9 @@ const showProducts = (products) => {
 
     const div = document.createElement("div");
     div.classList.add("product");
-    div.innerHTML = `<div class="single-product m-2" style='height:380px;'>
+    div.innerHTML = `<div class="single-product m-1" style='height:380px;'>
       <div>
-    <img class="product-image" style='height:150px' src="${image}"></img>
+    <img class="product-image" style='height:160px' src="${image}"></img>
       </div>
       <h3>${product.title.slice(0,65)}</h3>
       <h5>Category: ${product.category}</h5>
@@ -44,6 +41,7 @@ const displayDetails = details =>{
   <div class="card border-2 border-dark bg-warning shadow" style="width: 30rem;">
     <div class="card-body">
         <h4 class="card-title text-primary">${details.category}</h4>
+        <li class="card-text">${details.title}</li>
         <li class="card-text">${details.description.slice(0,100)}</li>
     </div>
 </div>`
@@ -52,10 +50,11 @@ document.getElementById('card-details').appendChild(div)
 
 let count = 0;
 const addToCart = (id, price) => {
+  // hide card-details
   document.getElementById('card-details').textContent=''
+
   count = count + 1;
   updatePrice("price", price);
-
   updateTaxAndCharge();
   document.getElementById("total-Products").innerText = parseFloat(count);
 };
