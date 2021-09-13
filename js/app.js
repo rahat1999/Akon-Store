@@ -1,6 +1,8 @@
+// card details
+// const cardDetails =document.getElementById('card-details')
+
 const loadProducts = () => {
-  const url = `https://fakestoreapi.com/products`;
-  fetch(url)
+  fetch('../js/data.json')
     .then((response) => response.json())
     .then((data) => showProducts(data));
 };
@@ -10,34 +12,57 @@ loadProducts();
 const showProducts = (products) => {
   const allProducts = products.map((pd) => pd);
   for (const product of allProducts) {
-    const image = product.images;
+    const image = product.image;
+
     const div = document.createElement("div");
     div.classList.add("product");
-    div.innerHTML = `<div class="single-product">
+    div.innerHTML = `<div class="single-product m-2" style='height:380px;'>
       <div>
-    <img class="product-image" src=${image}></img>
+    <img class="product-image" style='height:150px' src="${image}"></img>
       </div>
-      <h3>${product.title}</h3>
-      <p>Category: ${product.category}</p>
+      <h3>${product.title.slice(0,65)}</h3>
+      <h5>Category: ${product.category}</h5>
+      <h5>rate: ${product.rating.rate},  count: ${product.rating.count}</h5>
       <h2>Price: $ ${product.price}</h2>
       <button onclick="addToCart(${product.id},${product.price})" id="addToCart-btn" class="buy-now btn btn-success">add to cart</button>
-      <button id="details-btn" class="btn btn-danger">Details</button></div>
+      <button onclick="loadDetails('${product.id}')" class="btn btn-danger">Details</button></div>
       `;
     document.getElementById("all-products").appendChild(div);
   }
 };
+
+// card details
+const loadDetails = id =>{
+    fetch(`https://fakestoreapi.com/products/${id}`)
+    .then(res=>res.json())
+    .then(data=>displayDetails(data))
+}
+const displayDetails = details =>{
+  document.getElementById('card-details').textContent=''
+  const div = document.createElement('div')
+  div.innerHTML=`
+  <div class="card border-2 border-dark bg-warning shadow" style="width: 30rem;">
+    <div class="card-body">
+        <h4 class="card-title text-primary">${details.category}</h4>
+        <li class="card-text">${details.description.slice(0,100)}</li>
+    </div>
+</div>`
+document.getElementById('card-details').appendChild(div)
+}
+
 let count = 0;
 const addToCart = (id, price) => {
+  document.getElementById('card-details').textContent=''
   count = count + 1;
   updatePrice("price", price);
 
   updateTaxAndCharge();
-  document.getElementById("total-Products").innerText = count;
+  document.getElementById("total-Products").innerText = parseFloat(count);
 };
 
 const getInputValue = (id) => {
   const element = document.getElementById(id).innerText;
-  const converted = parseInt(element);
+  const converted = parseFloat(element);
   return converted;
 };
 
@@ -46,12 +71,13 @@ const updatePrice = (id, value) => {
   const convertedOldPrice = getInputValue(id);
   const convertPrice = parseFloat(value);
   const total = convertedOldPrice + convertPrice;
-  document.getElementById(id).innerText = Math.round(total);
+  document.getElementById(id).innerText =parseFloat(total).toFixed(2);
+  
 };
 
 // set innerText function
 const setInnerText = (id, value) => {
-  document.getElementById(id).innerText = Math.round(value);
+  document.getElementById(id).innerText = parseFloat(value).toFixed(2);
 };
 
 // update delivery charge and total Tax
@@ -69,6 +95,7 @@ const updateTaxAndCharge = () => {
     setInnerText("delivery-charge", 60);
     setInnerText("total-tax", priceConverted * 0.4);
   }
+  updateTotal()
 };
 
 //grandTotal update function
@@ -76,5 +103,6 @@ const updateTotal = () => {
   const grandTotal =
     getInputValue("price") + getInputValue("delivery-charge") +
     getInputValue("total-tax");
-  document.getElementById("total").innerText = grandTotal;
+  document.getElementById("total").innerText = parseFloat(grandTotal).toFixed(2);
 };
+
