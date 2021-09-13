@@ -40,9 +40,9 @@ const displayDetails = details =>{
   div.innerHTML=`
   <div class="card border-2 border-dark bg-warning shadow" style="width: 30rem;">
     <div class="card-body">
-        <h4 class="card-title text-primary">${details.category}</h4>
-        <li class="card-text">${details.title}</li>
-        <li class="card-text">${details.description.slice(0,100)}</li>
+        <h2 class="card-title text-center fw-bold">🧣${details.category}</h2>
+        <li class="card-text fw-bold">${details.title}</li>
+        <li class="card-text fw-bold">${details.description.slice(0,100)}</li>
     </div>
 </div>`
 document.getElementById('card-details').appendChild(div)
